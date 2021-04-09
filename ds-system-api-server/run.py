@@ -8,11 +8,11 @@ from api.api_menu import menu  # 导入方法
 from api.api_message import message  # 导入方法
 from api.api_student import student  # 导入方法
 from api.api_gotomessage import gotomessage 
-from flask_cors import *  # 跨域
+from flask_cors import *  # 跨域插件
 # 创建类的实例
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
-
+CORS(app, supports_credentials=True)
 # 导入各个接口
 app.register_blueprint(user, url_prefix='/user')
 app.register_blueprint(menu, url_prefix='/menus')
@@ -24,9 +24,9 @@ app.register_blueprint(gotomessage, url_prefix='/gotomessage')
 def hello():
     return jsonify(format(True, {}, '这是首页'),)
 
- # 跨域支持方法
 
 
+ # 跨域方法
 def after_request(response):
     # response.headers['Content-Security-Policy'] = 'upgrade-insecure-requests'
     response.headers['Cache-Control'] = 'no-cache'
@@ -38,7 +38,7 @@ def after_request(response):
 
 app.after_request(after_request)
 
-CORS(app, supports_credentials=True)
+
 if __name__ == '__main__':
     # create_table()
     # app.run(debug=True, threaded=True, host='0.0.0.0')

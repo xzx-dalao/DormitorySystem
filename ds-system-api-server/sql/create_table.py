@@ -28,8 +28,7 @@ class create_menus(db.Model):
     __tablename__ = 'menus'
     ps_id = db.Column(db.Integer, primary_key=True, nullable=False)
     ps_pname = db.Column(db.String(20), nullable=False)
-    ps_pid = db.Column(db.Integer)
-    ps_level = db.Column(db.Enum('3', '1', '2'), nullable=False)
+   
 
 
 # 二级菜单表
@@ -39,7 +38,7 @@ class create_childrenmenus(db.Model):
     ps_name = db.Column(db.String(20), nullable=False)
     ps_pid = db.Column(db.Integer, nullable=False, index=True)
     ps_path = db.Column(db.String(20), nullable=False)
-    ps_level = db.Column(db.Enum('3', '1', '2'), nullable=False)
+   
 
 # 宿舍信息表
 

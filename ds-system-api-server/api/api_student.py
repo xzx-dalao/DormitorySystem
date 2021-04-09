@@ -138,6 +138,8 @@ def delete_student(num):
             return jsonify(format_false(False, None, "num为空"))
         else:
             try:
+                
+                DeletemsgTB(num).delete_student_msg()
                 DeletemsgTB(num).delete_student()
                 num_n = SelectmsgTB(num).select_student()
                 if num_n == ():
@@ -196,36 +198,42 @@ def edit_student_editnum_commit():
         if not all([stu_id, stu_name, stu_gender, stu_age, stu_depart, stu_grade, stu_phone, stu_dormitory, stu_dormitory_id]):
             return jsonify(format_false(False, None, "表单有空的"))
         else:
-            bed = selectdormitorymsgTB(
-                stu_dormitory, stu_dormitory_id).selectdormitorylist()
-            count = InsertstudentmsgTB(stu_id, stu_name, stu_gender, stu_age, stu_depart,
-                                       stu_grade, stu_phone, stu_dormitory, stu_dormitory_id).selectstudent()
-            # try:
-            dict1 = results[0]
-            # print(dict1['stu_dormitory_id'], dict1['stu_dormitory'])
-            # count是从0开始的, count<4 0,1,2,3
-            # print(count,bed)
-            if count <= bed:
-                num_n = UpdatastudentTB(stu_id, stu_name, stu_gender, stu_age, stu_depart,
-                                        stu_grade, stu_phone, stu_dormitory, stu_dormitory_id).updatestudent()
-                selectdormitorymsgTB(dict1['stu_dormitory'], dict1['stu_dormitory_id']).updatecount()
-                bed = selectdormitorymsgTB(
-                    stu_dormitory, stu_dormitory_id).selectdormitorylist()
-                count = InsertstudentmsgTB(stu_id, stu_name, stu_gender, stu_age, stu_depart,
-                                       stu_grade, stu_phone, stu_dormitory, stu_dormitory_id).selectstudent()
-                if count > bed:
-                    num_n = UpdatastudentTB(dict1['stu_id'],  dict1['stu_name'],  dict1['stu_gender'],  dict1['stu_age'],  dict1['stu_depart'], 
-                                        dict1['stu_grade'], dict1['stu_phone'], dict1['stu_dormitory'], dict1['stu_dormitory_id']).updatestudent()
-                    content = jsonify(format_false(False, None, "学生信息更新失败"))
-                
-                else:
-                    content = jsonify(format(True, num_n, "学生信息更新成功"))
+            cunzai = selectdormitorymsgTB(
+                stu_dormitory, stu_dormitory_id).selectdormitory()
+            if cunzai ==():
+                content = jsonify(format_nofind(False, None, "学生信息更新失败"))
             else:
-                content = jsonify(format_full(
-                    False, None, '宿舍成员已经满了'))  # 状态码202
-            # except:
-            #     content = jsonify(format_false(False, None, '宿舍更新--成功失败，重复提交'))
+                bed = selectdormitorymsgTB(
+                stu_dormitory, stu_dormitory_id).selectdormitorylist()
+                count = InsertstudentmsgTB(stu_id, stu_name, stu_gender, stu_age, stu_depart,
+                                           stu_grade, stu_phone, stu_dormitory, stu_dormitory_id).selectstudent()
+                # try:
+                dict1 = results[0]
+                # print(dict1['stu_dormitory_id'], dict1['stu_dormitory'])
+                # count是从0开始的, count<4 0,1,2,3
+                # print(count,bed)
+                if count <= bed:
+                    num_n = UpdatastudentTB(stu_id, stu_name, stu_gender, stu_age, stu_depart,
+                                            stu_grade, stu_phone, stu_dormitory, stu_dormitory_id).updatestudent()
+                    selectdormitorymsgTB(dict1['stu_dormitory'], dict1['stu_dormitory_id']).updatecount()
+                    bed = selectdormitorymsgTB(
+                        stu_dormitory, stu_dormitory_id).selectdormitorylist()
+                    count = InsertstudentmsgTB(stu_id, stu_name, stu_gender, stu_age, stu_depart,
+                                           stu_grade, stu_phone, stu_dormitory, stu_dormitory_id).selectstudent()
+                    if count > bed:
+                        num_n = UpdatastudentTB(dict1['stu_id'],  dict1['stu_name'],  dict1['stu_gender'],  dict1['stu_age'],  dict1['stu_depart'], 
+                                            dict1['stu_grade'], dict1['stu_phone'], dict1['stu_dormitory'], dict1['stu_dormitory_id']).updatestudent()
+                        content = jsonify(format_false(False, None, "学生信息更新失败"))
+
+                    else:
+                        content = jsonify(format(True, num_n, "学生信息更新成功"))
+                else:
+                    content = jsonify(format_full(
+                        False, None, '宿舍成员已经满了'))  # 状态码202
+                # except:
+                #     content = jsonify(format_false(False, None, '宿舍更新--成功失败，重复提交'))
 
     else:
         content = jsonify(format_false(False, None, "101"))
     return content
+

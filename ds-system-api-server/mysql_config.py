@@ -1,8 +1,5 @@
-# 导入数据库连接池模块pip3 install PyMySQL
 from dbutils.persistent_db import PersistentDB
-# 导入数据库模块
 import pymysql
-import json
 # 创建数据库连接池
 POOL = PersistentDB(
     creator=pymysql,    # 使用链接数据库的模块

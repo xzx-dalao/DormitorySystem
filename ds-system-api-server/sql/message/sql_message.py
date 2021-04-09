@@ -135,20 +135,31 @@ class selectdormitorymsgTB:
         result = func(sql)
         return result
 
+    def Student_ifnull():
+        sql = "UPDATE dormitory SET people=0"
+        result = func(sql)
+        return result
+
     def selectcount():
         sql = "select stu_dormitory_id,stu_dormitory,count(*) from student group by stu_dormitory,stu_dormitory_id"
         re = func(sql)
-        result = []
-        for i in re:
-            relist = {}
-            relist['stu_dormitory_id'] = str(i[0])
-            relist['stu_dormitory'] = str(i[1])
-            relist['count'] = str(i[2])
-            Reupdate(str(i[2]), str(i[0]), str(i[1])).select_update_count()
+        if re == ():  # student为空的数据,更新数据
+            print('student为空了')
+            selectdormitorymsgTB.Student_ifnull()
             selectdormitorymsgTB.update_isfull()
             selectdormitorymsgTB.update_nofull()
-            result.append(relist)
-        return result
+        else:
+            result = []
+            for i in re:
+                relist = {}
+                relist['stu_dormitory_id'] = str(i[0])
+                relist['stu_dormitory'] = str(i[1])
+                relist['count'] = str(i[2])
+                Reupdate(str(i[2]), str(i[0]), str(i[1])).select_update_count()
+                selectdormitorymsgTB.update_isfull()
+                selectdormitorymsgTB.update_nofull()
+                result.append(relist)
+            return result
 
 # 更新状态用的
 
@@ -207,6 +218,18 @@ class DeletemsgTB:
     def delete_student(self):
         sql = "delete from student where stu_id = '%s'" % (self.num)
         result = func(sql)
+        return result
+
+    def delete_student_msg(self):
+        sql = "select * from student where stu_id = '%s'" % (self.num)
+        re = func(sql)
+        result = []
+        for i in re:
+            relist = {}
+            relist['stu_dormitory'] = str(i[7])
+            relist['stu_dormitory_id'] = str(i[8])
+            selectdormitorymsgTB(str(i[7]), str(i[8])).updatecount()
+            result.append(relist)
         return result
 
  # 更新住满状态用的
