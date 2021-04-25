@@ -5,12 +5,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: ''
+    token: '',
+    radio: '',
   },
   mutations: {
     set_token(state, token) {
       state.token = token
       window.sessionStorage.token = token //设置浏览器的token
+    },
+    set_radio(state, radio) {
+      state.radio = radio
     },
     del_token(state) {
       state.token = ''

@@ -3,8 +3,6 @@ from mysql_config import func
 
 class MessageTB:
     # 添加学生按钮对话框的宿舍楼信息
-    # def __init__(self):
-    #     pass
     def selectdormitory():
         sql = "SELECT distinct dormitory_id From dormitory order by dormitory_id asc"
         re = func(sql)
@@ -134,7 +132,6 @@ class selectdormitorymsgTB:
         sql = "UPDATE dormitory SET isfull='1' where people = bed_pid"
         result = func(sql)
         return result
-
     def Student_ifnull():
         sql = "UPDATE dormitory SET people=0"
         result = func(sql)
@@ -143,7 +140,7 @@ class selectdormitorymsgTB:
     def selectcount():
         sql = "select stu_dormitory_id,stu_dormitory,count(*) from student group by stu_dormitory,stu_dormitory_id"
         re = func(sql)
-        if re == ():  # student为空的数据,更新数据
+        if re==():#student为空的数据,更新数据
             print('student为空了')
             selectdormitorymsgTB.Student_ifnull()
             selectdormitorymsgTB.update_isfull()
@@ -161,6 +158,7 @@ class selectdormitorymsgTB:
                 result.append(relist)
             return result
 
+
 # 更新状态用的
 
 
@@ -169,7 +167,6 @@ class Reupdate:
         self.count = count
         self.stu_dormitory_id = stu_dormitory_id
         self.stu_dormitory = stu_dormitory
-
     def select_update_count(self):
         sql = "UPDATE dormitory SET people=%s where floor_id='%s' and dormitory_id ='%s'" % (
             self.count, self.stu_dormitory_id, self.stu_dormitory)
@@ -228,7 +225,7 @@ class DeletemsgTB:
             relist = {}
             relist['stu_dormitory'] = str(i[7])
             relist['stu_dormitory_id'] = str(i[8])
-            selectdormitorymsgTB(str(i[7]), str(i[8])).updatecount()
+            selectdormitorymsgTB(str(i[7]),str(i[8])).updatecount()
             result.append(relist)
         return result
 

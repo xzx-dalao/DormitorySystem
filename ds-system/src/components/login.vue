@@ -1,12 +1,5 @@
 <template>
   <div>
-    <!-- <div class="top">
-     <img src="../assets/logo.png" alt="" />
-    </div>
-    <div class="head">
-      <h1>账号密码登录</h1>
-    </div> -->
-
     <!-- 表单 -->
     <el-form
       label-width="0px"
@@ -44,6 +37,9 @@
 
       <!--按钮 -->
       <el-form-item class="btns">
+        <el-radio v-model="loginform.radio" label="1">管理员</el-radio>
+        <el-radio v-model="loginform.radio" label="2">教师</el-radio>
+        <el-radio v-model="loginform.radio" label="3">学生</el-radio>
         <el-button type="primary" @click="login">登录</el-button>
         <el-button type="info" @click="resetloginform">重置</el-button>
       </el-form-item>
@@ -52,13 +48,13 @@
 </template>
 
 <script>
-// import axios from 'axios'
 export default {
   name: "login",
   data() {
     return {
-      loginform: { username: "admin", password: "123456" },
+      loginform: { username: "admin", password: "123456", radio: "1", },
       //校验规则
+      radio: "1",
       loginrules: {
         username: [
           { required: true, message: "请输入登录名称", trigger: "blur" },
@@ -100,11 +96,12 @@ export default {
           if (res.data.meta.status !== 200)
             return this.$message.warning("登陆失败");
           this.$store.commit("set_token", res.data.data[0].token);
+          this.$store.commit("set_radio", res.data.data[0].radio);
           //设置token
           // window.sessionStorage.setItem("token", res.data.data[0].token);
-          // console.log(this.$store.state);
+          
           if (this.$store.state) {
-          this.$message.success("登陆成功");
+            this.$message.success("登陆成功");
             this.$router.push("/home");
           } else {
             this.$router.push("/login");
@@ -164,7 +161,7 @@ export default {
   padding: 30px 10px 0px 20px;
   transform: translate(-50%, -50%);
   background-color: rgba(250, 250, 250, 0.55);
-  .el-input{
+  .el-input {
     margin-bottom: 10px;
   }
 }

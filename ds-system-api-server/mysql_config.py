@@ -1,5 +1,8 @@
+# 导入数据库连接池模块pip3 install PyMySQL
 from dbutils.persistent_db import PersistentDB
+# 导入数据库模块
 import pymysql
+import json
 # 创建数据库连接池
 POOL = PersistentDB(
     creator=pymysql,    # 使用链接数据库的模块
@@ -11,7 +14,7 @@ POOL = PersistentDB(
     host='127.0.0.1',
     port=3306,
     user='root',
-    password='xzx123',
+    password='你的密码',
     database='test',
     charset='utf8'
 )
@@ -22,7 +25,7 @@ def func(sql):
     conn = POOL.connection(shareable=False)
     cursor = conn.cursor()
     cursor.execute(sql)
-    re = cursor.fetchall()#返回多个元组
+    re = cursor.fetchall()
     cursor.close()
     conn.close()
     return re

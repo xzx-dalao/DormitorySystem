@@ -10,6 +10,7 @@
       <!-- 添加楼宇按钮和删除楼宇按钮 -->
       <div class="btn">
         <el-button type="primary" @click="addDialogVisible = true"
+        :disabled='isshow_who?false:true'
           >添加楼宇</el-button
         >
         <div v-for="(item, index) in loulist" :key="index">
@@ -18,6 +19,7 @@
           }}</el-button>
         </div>
         <el-button type="danger" @click="deleteDialogVisible = true"
+        :disabled='isshow_who?false:true'
           >删除楼宇</el-button
         >
       </div>
@@ -259,6 +261,7 @@
         </el-col>
         <el-col :span="4">
           <el-button type="primary" @click="addmsgDialogVisible = true"
+          :disabled='isshow_who?false:true'
             >添加宿舍</el-button
           >
         </el-col>
@@ -307,7 +310,7 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180px">
+        <el-table-column label="操作" width="180px" v-if="isshow_who">
           <template v-slot="scope">
             <el-tooltip
               effect="dark"
@@ -363,6 +366,7 @@ export default {
   name: "dormitory",
   data() {
     return {
+      isshow: false,
       query: "", //input绑定
       searchlist: [],
       newListLength: "",
@@ -410,6 +414,7 @@ export default {
       },
       isshow: true,
       btn_index: "",
+      isshow_who: true,
     };
   },
   components: {},
@@ -417,12 +422,18 @@ export default {
   created() {},
   //生命周期 - 挂载完成（访问DOM元素）
   mounted() {
+    this.iswho();
     this.getsearch();
     this.getsutlist();
     this.getloulist();
   },
 
   methods: {
+    iswho(){
+       if (this.$store.state.radio == "2") {
+         this.isshow_who=false
+       }
+    },
     update_count() {
       this.$http.get("message/update").then((res) => {
         // console.log(res.data);
@@ -446,7 +457,7 @@ export default {
           this.searchlist = res.data.data;
           // console.log(res.data.data)
           this.$notify.success("模糊查询-楼的信息请求成功");
-          this.update_count()
+          this.update_count();
           this.isshow = false; //默认先点击搜索框
           this.btn_index = ""; //当这个index不为空时，防止在模糊搜索时候跳转到index里
         });
@@ -458,14 +469,14 @@ export default {
           return this.$message.error("C1-C.X请求失败");
         this.loulist = res.data.data;
         // this.$bus.$emit("loudata",this.loulist)
-          this.update_count()
+        this.update_count();
         this.$notify.success("C1-C.X信息请求成功");
       });
     },
 
     gettext(index) {
       if (index === "") {
-        console.log("index为空");
+        // console.log("index为空");
         this.getsearch(); //解决了未点击楼宇时，在模糊搜索里不会跳转
         return;
       } else {
@@ -475,7 +486,7 @@ export default {
             return this.$message.error("尚未查询到当前宿舍楼的信息");
           this.isshow = true;
           this.textlist = res.data.data;
-            this.update_count()
+          this.update_count();
           this.$notify.success("每一个宿舍楼的宿舍的信息请求成功");
         });
       }
@@ -512,7 +523,7 @@ export default {
         this.$http
           .put(`message/addnum/${this.deleteForm.housename}`)
           .then((res) => {
-            console.log(res.data)
+            // console.log(res.data)
             if (res.data.meta.status !== 200) {
               return this.$message.error("删除楼宇失败！");
             }
@@ -592,7 +603,7 @@ export default {
             if (res.data.meta.status !== 200) {
               return this.$message.error("提交编辑宿舍信息失败！");
             }
-                      this.update_count()
+            this.update_count();
             this.gettext(this.btn_index); //点击楼宇时候得到id值才执行的，防止跳转，如果没点楼宇就不执行
             this.editDialogVisible = false;
             this.$notify.success("提交编辑宿舍信息成功！");

@@ -19,6 +19,7 @@
         </el-col>
         <el-col :span="4">
           <el-button type="primary" @click="add_stu_DialogVisible = true"
+            :disabled='isshow_who?false:true'
             >添加学生</el-button
           >
         </el-col>
@@ -65,7 +66,7 @@
           sortable
           prop="stu_dormitory"
         ></el-table-column>
-        <el-table-column label="操作" width="180px">
+        <el-table-column label="操作" width="180px"  v-if="isshow_who">>
           <template v-slot="scope">
             <el-tooltip
               effect="dark"
@@ -345,6 +346,7 @@ export default {
       editstudentDialogVisible: false,
       editstuForm: {},
       isshow: true,
+      isshow_who:true
     };
   },
   components: {},
@@ -354,8 +356,14 @@ export default {
   mounted() {
     this.getsutlist();
     this.getloulist();
+    this.iswho();
   },
   methods: {
+      iswho(){
+       if (this.$store.state.radio == "2") {
+         this.isshow_who=false
+       }
+    },
     update_count() {
       this.$http.get("message/update").then((res) => {
         // console.log(res.data);
@@ -425,6 +433,7 @@ export default {
             })
           )
           .then((res) => {
+            // console.log(res.data)
             if (res.data.meta.status == 202) {
               return this.$message.error("宿舍已经满了！");
             }
@@ -468,7 +477,7 @@ export default {
             })
           )
           .then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             if (res.data.meta.status == 202) {
               return this.$message.error("宿舍已经满了！");
             }
@@ -497,8 +506,9 @@ export default {
             if (res.data.meta.status !== 200) {
               return this.$message.error("删除学生信息失败！");
             }
-                        this.update_count();
+
             this.getsearch();
+            this.update_count();
             this.$notify.success("删除学生信息成功！");
           });
         })

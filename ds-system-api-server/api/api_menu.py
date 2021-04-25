@@ -18,4 +18,17 @@ def getmenu():
         content = jsonify(format_false(False, None, '101'))
     return content
 
-
+@menu.route('/stuinfo')
+def getstumenu():
+    if request.method == 'GET':
+        try:
+            menulist = MenuTB.selectmenu_stu()  # 查左侧菜单
+            if menulist == ():
+                content = jsonify(format_false(False, None, "菜单请求失败"))
+            else:
+                content =  jsonify(format(True,menulist,'菜单请求成功'))
+        except:
+            content = jsonify(format_false(False,None, '可能是代码错误'))
+    else:
+        content = jsonify(format_false(False, None, '101'))
+    return content

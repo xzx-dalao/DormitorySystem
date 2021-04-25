@@ -8,7 +8,7 @@ app.config["SECRET_KEY"] = "XZX"  # 创建密匙
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
+# pd.io.sql.to_sql(DataResultDF,'tmp_formidinfo',engine, schema='liuyao', if_exists='append')
 db = SQLAlchemy(app)
 
 # 管理员表
@@ -19,7 +19,7 @@ class create_usertable(db.Model):  # admin
     username = db.Column(db.String(8), nullable=False,
                          primary_key=True, unique=True)
     password = db.Column(db.String(16), nullable=False)
-    # gender = db.Column(db.Enum('男','女'),nullable=False)
+    radio = db.Column(db.String(5),nullable=False)
 
 # 一级菜单表
 
@@ -28,7 +28,8 @@ class create_menus(db.Model):
     __tablename__ = 'menus'
     ps_id = db.Column(db.Integer, primary_key=True, nullable=False)
     ps_pname = db.Column(db.String(20), nullable=False)
-   
+    ps_pid = db.Column(db.Integer)
+    ps_level = db.Column(db.Enum('3', '1', '2'), nullable=False)
 
 
 # 二级菜单表
@@ -38,7 +39,7 @@ class create_childrenmenus(db.Model):
     ps_name = db.Column(db.String(20), nullable=False)
     ps_pid = db.Column(db.Integer, nullable=False, index=True)
     ps_path = db.Column(db.String(20), nullable=False)
-   
+    ps_level = db.Column(db.Enum('3', '1', '2'), nullable=False)
 
 # 宿舍信息表
 
@@ -52,7 +53,7 @@ class create_dormitory(db.Model):
     price = db.Column(db.Enum('1000', '1500', '2000'), nullable=False)
     floor_id = db.Column(db.String(5), nullable=False)
     isfull = db.Column(db.Enum('1', '0') , server_default="0", nullable=False)
-    people = db.Column(db.Integer, server_default="0")
+    people = db.Column(db.Integer)
 # C几楼
 
 
@@ -102,7 +103,9 @@ def create_table():
     # rs3 = create_student(stu_id="201810097075", stu_name="nbb", stu_gender="男", stu_age="19", stu_depart="电气学院",
     #                      stu_grade="2019", stu_phone="13252635147", stu_dormitory="653", stu_dormitory_id="C1")
 
-    role = create_usertable(username="admin", password="123456")  # 默认注册管理员
+    user1 = create_usertable(username="admin", password="123456",radio='1')  # 默认注册管理员
+    user2 = create_usertable(username="admin2", password="123456",radio='2')  
+    user3= create_usertable(username="admin3", password="123456",radio='3')  
     r0 = create_dormitory(dormitory_id="655",
                           floor_id="C1", bed_pid='2', price='1500', ceng_num="6")
     r1 = create_dormitory(dormitory_id="653",
@@ -151,7 +154,7 @@ def create_table():
 
     '''在Flask-SQLAlchemy中，插入、修改、删除操作，均由数据库会话管理。会话用db.session表示'''
     '''session 记录对象任务 '''
-    db.session.add_all([role, r0, r1, role1,
+    db.session.add_all([user1,user2,user3, r0, r1, role1,
                         role2, role3, rol1, rol2, rol3, rh1, rh2, rh3, rh4, rh5, r2, r3, r5, r6, r7, r8, r9, r10, r11, r12
                         ])
     '''提交任务到数据库中'''

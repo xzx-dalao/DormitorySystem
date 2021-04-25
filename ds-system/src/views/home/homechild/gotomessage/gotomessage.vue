@@ -17,8 +17,7 @@
         </el-col>
         <el-col :span="4">
           <el-button type="primary" @click="add_goto_DialogVisible = true"
-            >添加外出信息</el-button
-          >
+          v-if="isshow_who"  >添加外出信息</el-button>
         </el-col>
       </el-row>
     </el-card>
@@ -234,7 +233,7 @@
           prop="goto_reason"
         >
         </el-table-column>
-        <el-table-column label="是否晚归">
+        <el-table-column label="是否晚归" >
           <template v-slot="scope">
             <el-switch
               v-model="scope.row.goto_islate"
@@ -244,12 +243,13 @@
               inactive-value="1"
               active-text="否0"
               inactive-text="是1"
+              :disabled='isshow_who?false:true'
               @change="userStateChanged(scope.row)"
-            >
-            </el-switch>
+            ></el-switch>
+            
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180px">
+        <el-table-column label="操作" width="180px" v-if="isshow_who">
           <template v-slot="scope">
             <el-tooltip
               effect="dark"
@@ -336,6 +336,7 @@ export default {
           { required: true, message: "宿舍楼不能为空", trigger: "blur" },
         ],
       },
+      isshow_who:true
     };
   },
   components: {},
@@ -343,10 +344,16 @@ export default {
   created() {},
   //生命周期 - 挂载完成（访问DOM元素）
   mounted() {
+    this.iswho()
     this.get_gotomsg();
     this.getloulist(); //获取C.x宿舍楼信息
   },
   methods: {
+    iswho(){
+       if (this.$store.state.radio == "3"||this.$store.state.radio == "2") {
+         this.isshow_who=false
+       }
+    },
     //得到c.x的
      getloulist() {
       this.$http.get("message/getnum").then((res) => {

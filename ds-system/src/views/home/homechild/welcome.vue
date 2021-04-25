@@ -1,6 +1,6 @@
 <template>
   <div class="w">
-    <h1>欢迎来到垃圾管理系统</h1>
+    <h1>欢迎来到学生宿舍管理系统</h1>
     <el-carousel :interval="2000" type="card">
       <el-carousel-item v-for="item in list" :key="item.id" class="autoimg">
         <img :src="item.url" alt="" />

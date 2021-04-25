@@ -92,7 +92,6 @@ def post_addstumsg():
                 bed = selectdormitorymsgTB(
                     stu_dormitory, stu_dormitory_id).selectdormitorylist()
                 # count是从0开始的, count<4 0,1,2,3
-                # try:
                 if count < bed:
                     num = InsertstudentmsgTB(stu_id, stu_name, stu_gender, stu_age, stu_depart,
                                            stu_grade, stu_phone, stu_dormitory, stu_dormitory_id).insertstudent()
@@ -118,9 +117,6 @@ def post_addstumsg():
                     # 更改状态
                     content = jsonify(format_full(
                         False, None, '宿舍成员已经满了'))  # 状态码202
-                # except:
-                #     content = jsonify(format_nofind(
-                #         False, None, '没有这宿舍的信息'))  # 状态码203
             else:
                 content = jsonify(format_iscunzai(
                     False, isnull, "学生添加功能-学生id已经存在"))
@@ -128,6 +124,7 @@ def post_addstumsg():
     else:
         content = jsonify(format_false(False, None, "101"))
     return content
+
 
 
 # 实现删除按钮
@@ -138,7 +135,6 @@ def delete_student(num):
             return jsonify(format_false(False, None, "num为空"))
         else:
             try:
-                
                 DeletemsgTB(num).delete_student_msg()
                 DeletemsgTB(num).delete_student()
                 num_n = SelectmsgTB(num).select_student()
@@ -236,4 +232,3 @@ def edit_student_editnum_commit():
     else:
         content = jsonify(format_false(False, None, "101"))
     return content
-
